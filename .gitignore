@@ -1,0 +1,22 @@
+# python cache dirs
+__pycache__
+
+# python virtual environment
+.venv
+
+# vscode dir
+.vscode
+
+# Rest client for Api testing
+client.rest
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+
+# error logs
+error.txt
+
+# environment variables
+.env
