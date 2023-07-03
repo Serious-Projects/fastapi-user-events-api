@@ -4,7 +4,7 @@ from pydantic import EmailStr
 from sqlalchemy import DateTime, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.async_db import Base
+from ..database.async_db import Base
 
 
 class User(Base):

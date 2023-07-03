@@ -4,11 +4,9 @@ from sqlalchemy.orm import Session as SessionManager
 from sqlalchemy.orm import declarative_base, sessionmaker
 from typing_extensions import Annotated
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./dev.sqlite3"
+from ..config import config
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(config.sqlite_db_url, connect_args={"check_same_thread": False})
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
@@ -16,7 +14,7 @@ Base = declarative_base()
 
 
 # Dependency
-async def get_db():
+def get_db():
     db = SessionLocal()
     try:
         yield db

@@ -2,13 +2,15 @@ from pathlib import Path
 
 from fastapi import FastAPI, status
 
-from .database.connection import Base, SessionLocal, engine
-from .database.seeder import EntityNotFound, get_event
-from .views import auth, events, users
+from .database import Base, EntityNotFound, engine, get_event
+from .database.connection import SessionLocal
+from .views import auth_router, events_router, users_router
 
 # FastAPI instance
 app = FastAPI(title="Event Management API", version="1.0")
 BASE_DIR = Path(__file__).parent
+
+# Create all the necessary tables in the database (SQLite database)
 Base.metadata.create_all(bind=engine)
 
 
@@ -18,13 +20,19 @@ async def check_health():
     return {"message": "Api is working perfectly fine!"}
 
 
-app.include_router(users.router)
-app.include_router(events.router)
-app.include_router(auth.router)
+app.include_router(auth_router)
+app.include_router(events_router)
+app.include_router(users_router)
 
-if __name__ == "__main__":
+
+def test_runner():
     try:
         session = SessionLocal()
         event = get_event(2, session)
+        print(event)
     except EntityNotFound:
         print("User not found!")
+
+
+if __name__ == "__main__":
+    test_runner()

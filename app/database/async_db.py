@@ -6,9 +6,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:///./dev.sqlite3"
+from ..config import config
 
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL, pool_pre_ping=True, echo=False)
+engine = create_async_engine(config.sqlite_db_url_async, pool_pre_ping=True, echo=False)
 
 AsyncSessionLocal = async_sessionmaker(bind=engine, autoflush=False, future=True)
 

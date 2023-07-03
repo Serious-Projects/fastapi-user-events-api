@@ -1,12 +1,10 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 
 from ..database.connection import Session
 from ..models.user import User
 from ..schema.user import UpdateUser, UserIn, UserOut
-from ..security import CurrentLoggedInUser, authenticate_user_from
-from ..utils.hashing import hash_password
+from ..security import CurrentLoggedInUser
+from ..security.hashing import hash_password
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
