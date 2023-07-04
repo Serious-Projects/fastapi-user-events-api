@@ -33,6 +33,7 @@ def sponsor_the_event(event_id: int, sponsor: SponsorCreate, db: Session):
     "/{event_id}/withdraw-sponsorship/{sponsor_id}", status_code=status.HTTP_200_OK
 )
 def withdraw_sponsorship(event_id: int, sponsor_id: int, db: Session):
+    # try to find the event with the given event_id
     event = db.query(EventModel).get(event_id)
     if event is None:
         raise HTTPException(
@@ -40,6 +41,7 @@ def withdraw_sponsorship(event_id: int, sponsor_id: int, db: Session):
             detail="There is no such event created",
         )
 
+    # try to find the sponsor associated with the event
     sponsor = (
         db.query(SponsorModel)
         .filter(SponsorModel.id == sponsor_id, EventModel.sponsors.any(id=event_id))
@@ -51,7 +53,11 @@ def withdraw_sponsorship(event_id: int, sponsor_id: int, db: Session):
             detail="There is no such sponsor to this event",
         )
 
+    # remove the association from the events table
     event.sponsors.remove(sponsor)
+
+    # Delete the actual sponsor from the database too, because `remove()` only removes the association
+    # and does not delete's the original entity!
     db.delete(sponsor)
     db.commit()
 
