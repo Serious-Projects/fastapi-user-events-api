@@ -2,13 +2,14 @@
 __pycache__
 
 # python virtual environment
-.venv
+/.venv
 
 # vscode dir
-.vscode
+/.vscode
 
 # Rest client for Api testing
 client.rest
+/http
 
 # Databases
 *.sqlite

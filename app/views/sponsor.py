@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import JSONResponse
 
 from ..database import Session
 from ..models import EventModel, SponsorModel
@@ -26,3 +27,32 @@ def sponsor_the_event(event_id: int, sponsor: SponsorCreate, db: Session):
     db.commit()
     db.refresh(new_sponsor)
     return new_sponsor
+
+
+@router.get(
+    "/{event_id}/withdraw-sponsorship/{sponsor_id}", status_code=status.HTTP_200_OK
+)
+def withdraw_sponsorship(event_id: int, sponsor_id: int, db: Session):
+    event = db.query(EventModel).get(event_id)
+    if event is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="There is no such event created",
+        )
+
+    sponsor = (
+        db.query(SponsorModel)
+        .filter(SponsorModel.id == sponsor_id, EventModel.sponsors.any(id=event_id))
+        .first()
+    )
+    if sponsor is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="There is no such sponsor to this event",
+        )
+
+    event.sponsors.remove(sponsor)
+    db.delete(sponsor)
+    db.commit()
+
+    return JSONResponse(status_code=200, content={"message": "Sponsorship withdrawn"})

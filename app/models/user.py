@@ -18,7 +18,7 @@ class UserModel(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     # Relationship with self created events
-    events = relationship("EventModel", backref="creator")
+    events = relationship("EventModel", backref="creator", cascade="all, delete-orphan")
 
     # Relationship with enrolled events
     enrolled_events = relationship(

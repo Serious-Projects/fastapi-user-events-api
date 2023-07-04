@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from app.schema.event import EventOut
+from .event import EventOut
 
 
 class SponsorCreate(BaseModel):

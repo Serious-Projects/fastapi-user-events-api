@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from typing_extensions import Annotated
 
-from ..config import AppSettings, Settings, get_settings
+from ..config import AppSettings, Settings
 from ..database.connection import Session
 from ..models.user import UserModel
 
