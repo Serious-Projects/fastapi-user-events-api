@@ -9,7 +9,8 @@ class Settings(BaseSettings):
     app_name: str = "User Event API"
     sqlite_db_url_async: str = ""
     sqlite_db_url: str = ""
-    hash_secret_key: str = ""
+    jwt_secret_key: str = ""
+    hash_secret_key: bytes = b""
     algorithm: str = ""
     access_token_expiration_time: int = 15
 

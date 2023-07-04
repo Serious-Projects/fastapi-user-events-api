@@ -8,7 +8,7 @@ from typing_extensions import Annotated
 
 from ..config import AppSettings, Settings, get_settings
 from ..database.connection import Session
-from ..models.user import User
+from ..models.user import UserModel
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -44,7 +44,7 @@ def authenticate_user_from(token: Token, db: Session, config: AppSettings):
                 detail="Invalid authentication token",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        user = db.query(User).filter_by(name=username).first()
+        user = db.query(UserModel).filter_by(name=username).first()
         if user is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -60,4 +60,4 @@ def authenticate_user_from(token: Token, db: Session, config: AppSettings):
         )
 
 
-CurrentLoggedInUser = Annotated[User, Depends(authenticate_user_from)]
+CurrentLoggedInUser = Annotated[UserModel, Depends(authenticate_user_from)]

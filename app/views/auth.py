@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from ..config import AppSettings
 from ..database.connection import Session
-from ..models.user import User
+from ..models.user import UserModel
 from ..schema.auth import TokenBody
 from ..security import create_access_token, verify_password
 
@@ -19,7 +19,7 @@ def login(
     session: Session,
     config: AppSettings,
 ) -> TokenBody:
-    user = session.query(User).filter_by(name=form_data.username).first()
+    user = session.query(UserModel).filter_by(name=form_data.username).first()
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

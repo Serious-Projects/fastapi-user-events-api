@@ -1,5 +1,6 @@
 from .async_models import Event as AsyncEventModel
 from .async_models import User as AsyncUserModel
-from .enrollment import Enrollment
-from .event import Event
-from .user import User
+from .event import EventModel
+from .relations import user_event_association
+from .sponsor import SponsorModel
+from .user import UserModel

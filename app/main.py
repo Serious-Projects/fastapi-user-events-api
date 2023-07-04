@@ -4,7 +4,7 @@ from fastapi import FastAPI, status
 
 from .database import Base, EntityNotFound, engine, get_event
 from .database.connection import SessionLocal
-from .views import auth_router, events_router, users_router
+from .views import auth_router, events_router, sponsor_router, users_router
 
 # FastAPI instance
 app = FastAPI(title="Event Management API", version="1.0")
@@ -23,6 +23,7 @@ async def check_health():
 app.include_router(auth_router)
 app.include_router(events_router)
 app.include_router(users_router)
+app.include_router(sponsor_router)
 
 
 def test_runner():

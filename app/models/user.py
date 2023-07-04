@@ -2,10 +2,10 @@ from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from ..database.connection import Base
-from .enrollment import Enrollment
+from .relations import user_event_association
 
 
-class User(Base):
+class UserModel(Base):
     __tablename__ = "user_table"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
@@ -18,12 +18,15 @@ class User(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     # Relationship with self created events
-    events = relationship("Event", backref="creator")
+    events = relationship("EventModel", backref="creator")
 
     # Relationship with enrolled events
     enrolled_events = relationship(
-        "Event", secondary=Enrollment, back_populates="attendees"
+        "EventModel", secondary=user_event_association, back_populates="participants"
     )
 
+    def __repr__(self):
+        return f"<User(id={self.id}, name={self.name}, email={self.email})>"
 
-from .event import Event
+
+from .event import EventModel

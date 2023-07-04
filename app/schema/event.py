@@ -10,25 +10,29 @@ class BaseEvent(BaseModel):
 
 
 class EventIn(BaseEvent):
-    title: str | None = Field(None, title="Event Title")
-    description: str | None = Field(None, title="Event description")
+    title: str = Field(..., title="Event Title")
+    description: str = Field(..., title="Event description")
+    location: str = Field(..., title="Event location")
     date: datetime = Field(datetime.now(), title="Event occurring date")
-    creator_id: int = Field(0, title="Event creator's id")
 
 
 class EventOut(BaseEvent):
     id: int
     title: str
     description: str
+    location: str
     date: datetime
+    sponsors: List["Sponsor"]
 
 
 class UpdateEvent(BaseEvent):
     title: str | None = Field(None, min_length=5)
     description: str | None = Field(None, min_length=5)
+    location: str | None = Field(None, min_length=3)
     date: datetime | None = Field(None)
 
 
-from ..schema.user import UserOut
+from .sponsor import Sponsor
+from .user import UserOut
 
 EventOut.update_forward_refs()
