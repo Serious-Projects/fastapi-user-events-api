@@ -1,8 +1,4 @@
-from typing import List
-
 from pydantic import BaseModel, Field
-
-from .event import EventOut
 
 
 class SponsorCreate(BaseModel):

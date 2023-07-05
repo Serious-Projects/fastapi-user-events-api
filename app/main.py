@@ -1,6 +1,8 @@
 from pathlib import Path
 
 from fastapi import FastAPI, status
+from fastapi.responses import JSONResponse
+from sqlalchemy.exc import IntegrityError
 
 from .database import Base, EntityNotFound, engine, get_event
 from .database.connection import SessionLocal
@@ -24,6 +26,14 @@ app.include_router(auth_router)
 app.include_router(events_router)
 app.include_router(users_router)
 app.include_router(sponsor_router)
+
+
+@app.exception_handler(IntegrityError)
+def handle_unique_constraint_violation(request, exc):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={"message": "unique constraint violation"},
+    )
 
 
 def test_runner():

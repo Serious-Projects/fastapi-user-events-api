@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import ForwardRef, List
+from typing import List
 
 from pydantic import BaseModel, Field
 
@@ -33,6 +33,5 @@ class UpdateEvent(BaseEvent):
 
 
 from .sponsor import Sponsor
-from .user import UserOut
 
 EventOut.update_forward_refs()
