@@ -1,6 +1,4 @@
-from pathlib import Path
-
-from fastapi import FastAPI, status
+from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
 
@@ -10,7 +8,6 @@ from .views import auth_router, events_router, sponsor_router, users_router
 
 # FastAPI instance
 app = FastAPI(title="Event Management API", version="1.0")
-BASE_DIR = Path(__file__).parent
 
 # Create all the necessary tables in the database (SQLite database)
 Base.metadata.create_all(bind=engine)
@@ -22,20 +19,23 @@ async def check_health():
     return {"message": "Api is working perfectly fine!"}
 
 
+# register all the business route handlers
 app.include_router(auth_router)
 app.include_router(events_router)
 app.include_router(users_router)
 app.include_router(sponsor_router)
 
 
+# `Unique Constraint Validation` exception handler
 @app.exception_handler(IntegrityError)
-def handle_unique_constraint_violation(request, exc):
+def handle_unique_constraint_violation(request: Request, exc):
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
         content={"message": "unique constraint violation"},
     )
 
 
+# dummy method just to dump some data in the dev db
 def test_runner():
     try:
         session = SessionLocal()
@@ -46,4 +46,6 @@ def test_runner():
 
 
 if __name__ == "__main__":
-    test_runner()
+    import uvicorn
+
+    uvicorn.run(app, port=8000)

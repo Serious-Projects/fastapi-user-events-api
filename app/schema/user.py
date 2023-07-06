@@ -8,7 +8,7 @@ class BaseSchema(BaseModel):
         orm_mode = True
 
 
-class UserIn(BaseSchema):
+class UserCreate(BaseSchema):
     name: str = Field(..., title="Username", max_length=25)
     email: EmailStr = Field(..., title="User email")
     password: str = Field(..., title="User password", min_length=8)

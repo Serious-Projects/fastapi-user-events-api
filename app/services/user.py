@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from ..models import UserModel
-from ..schema.user import UpdateUser, UserIn
+from ..schema.user import UpdateUser, UserCreate
 from ..security.hashing import hash_password
 
 
@@ -15,9 +15,9 @@ def get_user_by(id: int, db: Session) -> UserModel:
     return user
 
 
-def create_user(db: Session, user: UserIn) -> UserModel:
+def create_user(db: Session, user: UserCreate):
     hashed_password = hash_password(user.password)
-    new_user = UserModel(**user, password=hashed_password)
+    new_user = UserModel(name=user.name, email=user.email, password=hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

@@ -10,7 +10,7 @@ from ..models.user import UserModel
 from ..schema.auth import TokenBody, UserCredentials
 from ..security import create_access_token, verify_password
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(prefix="/auth", tags=["Authentication", "Authenticated"])
 
 
 @router.post("/login", status_code=status.HTTP_200_OK, response_model=TokenBody)

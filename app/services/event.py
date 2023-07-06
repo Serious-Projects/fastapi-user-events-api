@@ -18,7 +18,7 @@ def get_event_by(id: int, db: Session) -> EventModel:
 def create_event(
     db: Session, event: EventIn, curr_user: CurrentLoggedInUser
 ) -> EventModel:
-    event = EventModel(**event, creator_id=curr_user.id)
+    event = EventModel(**event.dict(), creator_id=curr_user.id)
     # Add a new event to the database
     db.add(event)
     db.commit()

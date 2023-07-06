@@ -1,12 +1,16 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 
 from ..database.connection import Session
 from ..models.event import EventModel
 from ..schema.event import EventIn, EventOut, UpdateEvent
-from ..security import CurrentLoggedInUser
+from ..security import CurrentLoggedInUser, authenticate_user_from
 from ..services import event as event_service
 
-router = APIRouter(prefix="/events", tags=["Events"])
+router = APIRouter(
+    prefix="/events",
+    tags=["Events", "Authenticated"],
+    dependencies=[Depends(authenticate_user_from)],
+)
 
 
 @router.get("", response_model=list[EventOut], status_code=status.HTTP_200_OK)
