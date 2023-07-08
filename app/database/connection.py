@@ -6,7 +6,7 @@ from typing_extensions import Annotated
 
 from ..config import config
 
-engine = create_engine(config.sqlite_db_url, connect_args={"check_same_thread": False})
+engine = create_engine(config.SQLITE_DB_URL, connect_args={"check_same_thread": False})
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 

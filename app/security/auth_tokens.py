@@ -27,16 +27,16 @@ def create_access_token(
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     encoded_jwt_token = jwt.encode(
-        to_encode, config.hash_secret_key, algorithm=config.algorithm
+        to_encode, config.HASH_SECRET_KEY, algorithm=config.ALGORITHM
     )
     return encoded_jwt_token
 
 
 def authenticate_user_from(token: Token, db: Session, config: AppSettings):
+    hash_secret_key = config.HASH_SECRET_KEY
+    algorithm = config.ALGORITHM
     try:
-        payload = jwt.decode(
-            token, config.hash_secret_key, algorithms=[config.algorithm]
-        )
+        payload = jwt.decode(token, hash_secret_key, algorithms=[algorithm])
         username = payload.get("sub")
         if username is None:
             raise HTTPException(

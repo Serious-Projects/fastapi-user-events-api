@@ -33,7 +33,7 @@ def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token_expires_in = timedelta(minutes=config.access_token_expiration_time)
+    access_token_expires_in = timedelta(minutes=config.ACCESS_TOKEN_EXPIRATION_TIME)
     access_token = create_access_token(
         data={"sub": user.name}, expires_in=access_token_expires_in, config=config
     )
@@ -59,7 +59,7 @@ def login_new(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token_expires_in = timedelta(minutes=config.access_token_expiration_time)
+    access_token_expires_in = timedelta(minutes=config.ACCESS_TOKEN_EXPIRATION_TIME)
     access_token = create_access_token(
         data={"sub": user.name}, expires_in=access_token_expires_in, config=config
     )

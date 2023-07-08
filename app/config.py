@@ -6,13 +6,13 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    app_name: str = "User Event API"
-    sqlite_db_url_async: str = ""
-    sqlite_db_url: str = ""
-    jwt_secret_key: str = ""
-    hash_secret_key: bytes = b""
-    algorithm: str = ""
-    access_token_expiration_time: int = 15
+    APP_NAME: str = "User Event API"
+    SQLITE_DB_URL_ASYNC: str = ""
+    SQLITE_DB_URL: str = ""
+    JWT_SECRET_KEY: str = ""
+    HASH_SECRET_KEY: bytes = b""
+    ALGORITHM: str = ""
+    ACCESS_TOKEN_EXPIRATION_TIME: int = 15
 
     class Config:
         env_file = ".env"

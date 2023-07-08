@@ -1,10 +1,6 @@
 from passlib.context import CryptContext
 
-from ..config import config
-
 pass_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-SECRET_KEY = config.hash_secret_key
 
 
 def hash_password(password: str) -> str:

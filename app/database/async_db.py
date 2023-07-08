@@ -8,7 +8,7 @@ from sqlalchemy.orm import DeclarativeBase
 
 from ..config import config
 
-engine = create_async_engine(config.sqlite_db_url_async, pool_pre_ping=True, echo=False)
+engine = create_async_engine(config.SQLITE_DB_URL_ASYNC, pool_pre_ping=True, echo=False)
 
 AsyncSessionLocal = async_sessionmaker(bind=engine, autoflush=False, future=True)
 
