@@ -1,6 +1,8 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.exceptions import EntityNotFoundException
+
 from ..models import EventModel, SponsorModel, event_sponsor_association
 from ..schema.sponsor import SponsorCreate
 
@@ -8,10 +10,7 @@ from ..schema.sponsor import SponsorCreate
 def get_sponsor_by(id: int, db: Session) -> SponsorModel:
     sponsor = db.query(SponsorModel).get(id)
     if sponsor is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="no such sponsor is sponsoring this event",
-        )
+        raise EntityNotFoundException(detail="no such sponsor is sponsoring this event")
     return sponsor
 
 

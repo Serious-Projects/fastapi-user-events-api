@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
 
@@ -13,6 +14,27 @@ app = FastAPI(title="Event Management API", version="1.0")
 Base.metadata.create_all(bind=engine)
 
 
+# `Unique Constraint Validation` exception handler
+@app.exception_handler(IntegrityError)
+def handle_unique_constraint_violation(req: Request, e: Exception):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={"message": "unique constraint violation"},
+    )
+
+
+# `Unique Constraint Validation` exception handler
+@app.exception_handler(RequestValidationError)
+def handle_value_error(req: Request, e: Exception):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={
+            "message": "invalid value format provided for contact field",
+            "example": "123-456-7890 (email-address)",
+        },
+    )
+
+
 # Health-check route
 @app.get("/health-check", status_code=status.HTTP_200_OK)
 async def check_health():
@@ -24,15 +46,6 @@ app.include_router(auth_router)
 app.include_router(events_router)
 app.include_router(users_router)
 app.include_router(sponsor_router)
-
-
-# `Unique Constraint Validation` exception handler
-@app.exception_handler(IntegrityError)
-def handle_unique_constraint_violation(request: Request, exc):
-    return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content={"message": "unique constraint violation"},
-    )
 
 
 # dummy method just to dump some data in the dev db

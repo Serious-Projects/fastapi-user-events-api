@@ -1,6 +1,6 @@
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from ..exceptions import EntityNotFoundException
 from ..models import UserModel
 from ..schema.user import UpdateUser, UserCreate
 from ..security.hashing import hash_password
@@ -9,10 +9,23 @@ from ..security.hashing import hash_password
 def get_user_by(id: int, db: Session) -> UserModel:
     user = db.query(UserModel).get(id)
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="user not found"
-        )
+        raise EntityNotFoundException("user not found")
     return user
+
+
+def get_all_users(id: int, db: Session) -> list[UserModel]:
+    users = db.query(UserModel).all()
+    return users
+
+
+def get_user_by_filter(db: Session, **kwargs) -> UserModel:
+    user = db.query(UserModel).filter_by(**kwargs).first()
+    return user
+
+
+def get_users_by_filter(db: Session, **kwargs) -> list[UserModel]:
+    users = db.query(UserModel).filter_by(**kwargs).all()
+    return users
 
 
 def create_user(db: Session, user: UserCreate):
