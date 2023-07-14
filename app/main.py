@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
@@ -15,23 +15,20 @@ Base.metadata.create_all(bind=engine)
 
 
 # `Unique Constraint Validation` exception handler
-@app.exception_handler(IntegrityError)
-def handle_unique_constraint_violation(req: Request, e: Exception):
+@app.exception_handler(HTTPException)
+def handle_unique_constraint_violation(req: Request, e: HTTPException):
     return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content={"message": "unique constraint violation"},
+        status_code=e.status_code or status.HTTP_400_BAD_REQUEST,
+        content={"message": e.detail or "Something went wrong"},
     )
 
 
-# `Unique Constraint Validation` exception handler
+# Handle pydantic validation errors
 @app.exception_handler(RequestValidationError)
 def handle_value_error(req: Request, e: Exception):
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
-        content={
-            "message": "invalid value format provided for contact field",
-            "example": "123-456-7890 (email-address)",
-        },
+        content={"message": "creation of duplicate data"},
     )
 
 

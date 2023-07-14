@@ -6,6 +6,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from typing_extensions import Annotated
 
+from app.api.schema.auth import CurrentUser
+
 from ..api.models.user import UserModel
 from ..config import AppSettings, Settings
 from ..database.connection import Session
@@ -60,4 +62,4 @@ def authenticate_user_from(token: Token, db: Session, config: AppSettings):
         )
 
 
-CurrentLoggedInUser = Annotated[UserModel, Depends(authenticate_user_from)]
+CurrentLoggedInUser = Annotated[CurrentUser, Depends(authenticate_user_from)]

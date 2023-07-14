@@ -4,19 +4,14 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-class BaseEvent(BaseModel):
-    class Config:
-        orm_mode = True
-
-
-class EventIn(BaseEvent):
+class EventIn(BaseModel):
     title: str = Field(..., title="Event Title")
     description: str = Field(..., title="Event description")
     location: str = Field(..., title="Event location")
     date: datetime = Field(datetime.now(), title="Event occurring date")
 
 
-class EventOut(BaseEvent):
+class EventOut(BaseModel):
     id: int
     title: str
     description: str
@@ -24,8 +19,11 @@ class EventOut(BaseEvent):
     date: datetime
     sponsors: List["Sponsor"]
 
+    class Config:
+        orm_mode = True
 
-class UpdateEvent(BaseEvent):
+
+class UpdateEvent(BaseModel):
     title: str | None = Field(None, min_length=5)
     description: str | None = Field(None, min_length=5)
     location: str | None = Field(None, min_length=3)

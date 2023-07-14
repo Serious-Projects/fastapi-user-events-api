@@ -1,8 +1,8 @@
 from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
 
-from ..database.connection import Base
-from .relations import user_event_association
+from ...database.connection import Base
+from ..models.relations import user_event_association
 
 
 class UserModel(Base):

@@ -8,6 +8,15 @@ class EntityNotFoundException(HTTPException):
 
     def __init__(self, detail: Optional[str] = "Entity not found exception"):
         super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
+        self.detail = detail
+
+
+class EmptyTableException(HTTPException):
+    """Exception raised when the table is empty i.e it has no rows."""
+
+    def __init__(self, detail: Optional[str] = "no rows present in the table"):
+        super().__init__(status_code=status.HTTP_200_OK, detail=detail)
+        self.detail = detail
 
 
 class DuplicateEntityException(HTTPException):
@@ -22,5 +31,6 @@ class InternalServerException(HTTPException):
 
     def __init__(self, detail: Optional[str] = "Internal Server Error exception"):
         super().__init__(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=detail
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=detail,
         )

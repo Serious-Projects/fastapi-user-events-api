@@ -3,25 +3,23 @@ from typing import List
 from pydantic import BaseModel, EmailStr, Field
 
 
-class BaseSchema(BaseModel):
-    class Config:
-        orm_mode = True
-
-
-class UserCreate(BaseSchema):
+class UserCreate(BaseModel):
     name: str = Field(..., title="Username", max_length=25)
     email: EmailStr = Field(..., title="User email")
     password: str = Field(..., title="User password", min_length=8)
 
 
-class UserOut(BaseSchema):
+class UserOut(BaseModel):
     id: int
     name: str
     email: EmailStr
     enrolled_events: List["EventOut"]
 
+    class Config:
+        orm_mode = True
 
-class UpdateUser(BaseSchema):
+
+class UpdateUser(BaseModel):
     name: str | None = Field(None, min_length=6)
     email: EmailStr | None = Field(None)
 

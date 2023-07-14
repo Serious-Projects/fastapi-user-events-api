@@ -1,8 +1,8 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import relationship
 
-from ..database.connection import Base
-from .relations import event_sponsor_association, user_event_association
+from ...database.connection import Base
+from ..models.relations import event_sponsor_association, user_event_association
 
 
 class EventModel(Base):
@@ -31,6 +31,3 @@ class EventModel(Base):
 
     def __repr__(self):
         return f"<Event(id={self.id}, title={self.title}, date_time={self.date})>"
-
-
-from .user import UserModel

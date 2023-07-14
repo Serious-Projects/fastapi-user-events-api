@@ -1,19 +1,21 @@
 from datetime import timedelta
-from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from typing_extensions import Annotated
 
-from ..config import AppSettings
-from ..database.connection import Session
+from ...config import AppSettings
+from ...database.connection import Session
+from ...security.auth_tokens import create_access_token
+from ...security.hashing import verify_password
 from ..models.user import UserModel
 from ..schema.auth import TokenBody, UserCredentials
-from ..security import create_access_token, verify_password
+from ..schema.user import UserCreate, UserOut
 
-router = APIRouter(prefix="/auth", tags=["Authentication", "Authenticated"])
+authRouter = APIRouter()
 
 
-@router.post("/login", status_code=status.HTTP_200_OK, response_model=TokenBody)
+@authRouter.post("/login", status_code=status.HTTP_200_OK, response_model=TokenBody)
 def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     session: Session,
@@ -41,7 +43,7 @@ def login(
     return TokenBody(access_token=access_token, type="bearer")
 
 
-@router.post("/login-new", status_code=status.HTTP_200_OK, response_model=TokenBody)
+@authRouter.post("/login-new", status_code=status.HTTP_200_OK, response_model=TokenBody)
 def login_new(
     form_data: UserCredentials, session: Session, config: AppSettings
 ) -> TokenBody:
@@ -65,3 +67,9 @@ def login_new(
     )
 
     return TokenBody(access_token=access_token, type="bearer")
+
+
+@authRouter.post("/register", status_code=status.HTTP_200_OK, response_model=UserOut)
+def create_user(user: UserCreate, db: Session):
+    # user = user_service.create_user(db, user)
+    return

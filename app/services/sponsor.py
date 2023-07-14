@@ -1,10 +1,10 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.exceptions import EntityNotFoundException
+from app.utils.exceptions import EntityNotFoundException
 
-from ..models import EventModel, SponsorModel, event_sponsor_association
-from ..schema.sponsor import SponsorCreate
+from ..api.models import EventModel, SponsorModel, event_sponsor_association
+from ..api.schema.sponsor import SponsorCreate
 
 
 def get_sponsor_by(id: int, db: Session) -> SponsorModel:

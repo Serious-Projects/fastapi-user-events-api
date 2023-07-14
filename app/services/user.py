@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 
-from ..exceptions import EntityNotFoundException
-from ..models import UserModel
-from ..schema.user import UpdateUser, UserCreate
+from ..api.models import UserModel
+from ..api.schema.user import UpdateUser, UserCreate
 from ..security.hashing import hash_password
+from ..utils.exceptions import EmptyTableException, EntityNotFoundException
 
 
 def get_user_by(id: int, db: Session) -> UserModel:
@@ -13,8 +13,10 @@ def get_user_by(id: int, db: Session) -> UserModel:
     return user
 
 
-def get_all_users(id: int, db: Session) -> list[UserModel]:
+def get_all_users(db: Session) -> list[UserModel]:
     users = db.query(UserModel).all()
+    if len(users) == 0:
+        raise EmptyTableException()
     return users
 
 

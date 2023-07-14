@@ -1,7 +1,7 @@
 from faker import Faker
 
-from ..models.event import EventModel
-from ..models.user import UserModel
+from ..api.models.event import EventModel
+from ..api.models.user import UserModel
 from .connection import Session
 
 fake = Faker()
