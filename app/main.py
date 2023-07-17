@@ -1,11 +1,9 @@
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from sqlalchemy.exc import IntegrityError
 
-from .database import Base, EntityNotFound, engine, get_event
-from .database.connection import SessionLocal
-from .views import auth_router, events_router, sponsor_router, users_router
+from app.api.routers import authRouter, eventRouter, sponsorRouter, userRouter
+from app.database.connection import Base, engine
 
 # FastAPI instance
 app = FastAPI(title="Event Management API", version="1.0")
@@ -23,13 +21,13 @@ def handle_unique_constraint_violation(req: Request, e: HTTPException):
     )
 
 
-# Handle pydantic validation errors
-@app.exception_handler(RequestValidationError)
-def handle_value_error(req: Request, e: Exception):
-    return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content={"message": "creation of duplicate data"},
-    )
+# # Handle pydantic validation errors
+# @app.exception_handler(RequestValidationError)
+# def handle_value_error(req: Request, e: Exception):
+#     return JSONResponse(
+#         status_code=status.HTTP_400_BAD_REQUEST,
+#         content={"message": str(e)},
+#     )
 
 
 # Health-check route
@@ -39,23 +37,7 @@ async def check_health():
 
 
 # register all the business route handlers
-app.include_router(auth_router)
-app.include_router(events_router)
-app.include_router(users_router)
-app.include_router(sponsor_router)
-
-
-# dummy method just to dump some data in the dev db
-def test_runner():
-    try:
-        session = SessionLocal()
-        event = get_event(2, session)
-        print(event)
-    except EntityNotFound:
-        print("User not found!")
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, port=8000)
+app.include_router(authRouter)
+app.include_router(eventRouter)
+app.include_router(userRouter)
+app.include_router(sponsorRouter)

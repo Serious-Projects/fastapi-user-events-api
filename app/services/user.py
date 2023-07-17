@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 
 from ..api.models import UserModel
 from ..api.schema.user import UpdateUser, UserCreate
-from ..security.hashing import hash_password
 from ..utils.exceptions import EmptyTableException, EntityNotFoundException
+from ..utils.hashing import hash_password
 
 
 def get_user_by(id: int, db: Session) -> UserModel:

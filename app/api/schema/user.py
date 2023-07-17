@@ -24,6 +24,6 @@ class UpdateUser(BaseModel):
     email: EmailStr | None = Field(None)
 
 
-from ..schema.event import EventOut
+from app.api.schema.event import EventOut
 
 UserOut.update_forward_refs()

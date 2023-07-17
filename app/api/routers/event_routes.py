@@ -1,40 +1,62 @@
-from fastapi import APIRouter, status
+from typing import Union
 
-from ...database.connection import Session
-from ...security.auth_tokens import CurrentLoggedInUser
-from ..models.event import EventModel
-from ..schema.event import EventIn, EventOut, UpdateEvent
+from fastapi import APIRouter, Depends, status
 
-eventRouter = APIRouter()
+from app.api.schema.event import EventIn, EventOut, UpdateEvent
+from app.api.services import EventService, get_event_service
+from app.utils.jwt import CurrentLoggedInUser
 
-
-@eventRouter.get("", response_model=list[EventOut], status_code=status.HTTP_200_OK)
-def get_events_all(db: Session):
-    events = db.query(EventModel).order_by(EventModel.created_at).all()
-    return events
+eventRouter = APIRouter(prefix="")
 
 
-@eventRouter.get("/{event_id}", response_model=EventOut, status_code=status.HTTP_200_OK)
-def get_event(event_id: int, db: Session):
-    # event = event_service.get_event_by(event_id, db)
-    return
+@eventRouter.get(
+    "/events", response_model=list[EventOut], status_code=status.HTTP_200_OK
+)
+def get_all_events(
+    curr_user: CurrentLoggedInUser,
+    event_service: EventService = Depends(get_event_service),
+):
+    return event_service.get_all()
 
 
-@eventRouter.post("", status_code=status.HTTP_201_CREATED, response_model=EventOut)
-def create_event(curr_user: CurrentLoggedInUser, event: EventIn, db: Session):
-    # event = event_service.create_event(db, event, curr_user)
-    return
+@eventRouter.get(
+    "/events/{event_id}", response_model=EventOut, status_code=status.HTTP_200_OK
+)
+def get_event(
+    event_id: Union[int, str],
+    curr_user: CurrentLoggedInUser,
+    event_service: EventService = Depends(get_event_service),
+):
+    return event_service.get(event_id)
+
+
+@eventRouter.post(
+    "/event", status_code=status.HTTP_201_CREATED, response_model=EventOut
+)
+def create_event(
+    curr_user: CurrentLoggedInUser,
+    event: EventIn,
+    event_service: EventService = Depends(get_event_service),
+):
+    return event_service.create(event, curr_user)
 
 
 @eventRouter.patch(
-    "/{event_id}", status_code=status.HTTP_200_OK, response_model=EventOut
+    "/event/{event_id}", status_code=status.HTTP_200_OK, response_model=EventOut
 )
-def update_event(event_id: int, event_data: UpdateEvent, db: Session):
-    # event = event_service.update_event(db, event_id, event_data)
-    return
+def update_event(
+    event_id: Union[int, str],
+    event_data: UpdateEvent,
+    curr_user: CurrentLoggedInUser,
+    event_service: EventService = Depends(get_event_service),
+):
+    return event_service.update(event_id, event_data)
 
 
-@eventRouter.delete("/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_event(event_id: int, db: Session):
-    # event_service.delete_event(db, event_id)
-    return
+@eventRouter.delete("/event/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_event(
+    event_id: Union[int, str],
+    curr_user: CurrentLoggedInUser,
+    event_service: EventService = Depends(get_event_service),
+):
+    return event_service.delete(event_id)

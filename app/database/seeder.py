@@ -1,8 +1,8 @@
 from faker import Faker
 
-from ..api.models.event import EventModel
-from ..api.models.user import UserModel
-from .connection import Session
+from app.api.models.event import EventModel
+from app.api.models.user import UserModel
+from app.database.connection import Session
 
 fake = Faker()
 

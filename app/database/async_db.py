@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-from ..config import config
+from app.config import config
 
 engine = create_async_engine(config.SQLITE_DB_URL_ASYNC, pool_pre_ping=True, echo=False)
 

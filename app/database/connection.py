@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session as SessionManager
 from sqlalchemy.orm import declarative_base, sessionmaker
 from typing_extensions import Annotated
 
-from ..config import config
+from app.config import Settings
+
+config = Settings()
 
 engine = create_engine(config.SQLITE_DB_URL, connect_args={"check_same_thread": False})
 
@@ -20,6 +22,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-Session = Annotated[SessionManager, Depends(get_db)]

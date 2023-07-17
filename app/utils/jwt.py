@@ -1,16 +1,13 @@
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from typing_extensions import Annotated
 
+from app.api.models.user import UserModel
 from app.api.schema.auth import CurrentUser
-
-from ..api.models.user import UserModel
-from ..config import AppSettings, Settings
-from ..database.connection import Session
+from app.config import Settings, get_settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -34,9 +31,14 @@ def create_access_token(
     return encoded_jwt_token
 
 
-def authenticate_user_from(token: Token, db: Session, config: AppSettings):
+def authenticate_user(token: Token) -> UserModel:
+    from app.api.services import UserService, get_user_service
+
+    user_service: UserService = get_user_service()
+    config: Settings = get_settings()
     hash_secret_key = config.HASH_SECRET_KEY
     algorithm = config.ALGORITHM
+
     try:
         payload = jwt.decode(token, hash_secret_key, algorithms=[algorithm])
         username = payload.get("sub")
@@ -46,7 +48,7 @@ def authenticate_user_from(token: Token, db: Session, config: AppSettings):
                 detail="Invalid authentication token",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        user = db.query(UserModel).filter_by(name=username).first()
+        user = user_service.get_by_filter(name=username)
         if user is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -62,4 +64,4 @@ def authenticate_user_from(token: Token, db: Session, config: AppSettings):
         )
 
 
-CurrentLoggedInUser = Annotated[CurrentUser, Depends(authenticate_user_from)]
+CurrentLoggedInUser = Annotated[CurrentUser, Depends(authenticate_user)]

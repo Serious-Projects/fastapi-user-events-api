@@ -1,8 +1,12 @@
-from fastapi import APIRouter, status
-from fastapi.responses import JSONResponse
-from requests import Session
+from typing import Union
 
-from ..schema.sponsor import Sponsor, SponsorCreate
+from fastapi import APIRouter, Depends, status
+from fastapi.responses import JSONResponse
+
+from app.api.schema.sponsor import Sponsor, SponsorCreate
+from app.api.services import get_event_service, get_sponsor_service
+from app.api.services.event_service import EventService
+from app.api.services.sponsor_service import SponsorService
 
 sponsorRouter = APIRouter()
 
@@ -10,9 +14,12 @@ sponsorRouter = APIRouter()
 @sponsorRouter.post(
     "/to/{event_id}", status_code=status.HTTP_200_OK, response_model=Sponsor
 )
-def sponsor_the_event(event_id: int, sponsor: SponsorCreate, db: Session):
-    # event = event_service.get_event_by(event_id, db)
-    # _ = sponsor_service.add_sponsorship(db, sponsor, event)
+def sponsor_the_event(
+    event_id: Union[int, str],
+    sponsor: SponsorCreate,
+    sponsor_service: SponsorService = Depends(get_sponsor_service),
+):
+    sponsor_service.add(event_id, sponsor)
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={"message": "sponsorship added successfully"},
@@ -22,10 +29,12 @@ def sponsor_the_event(event_id: int, sponsor: SponsorCreate, db: Session):
 @sponsorRouter.get(
     "/{event_id}/withdraw-sponsorship/{sponsor_id}", status_code=status.HTTP_200_OK
 )
-def withdraw_sponsorship(event_id: int, sponsor_id: int, db: Session):
-    # try to find the event with the given event_id
-    # event = event_service.get_event_by(event_id, db)
-    # _ = sponsor_service.withdraw_sponsorship(db, sponsor_id, event_id, event)
+def withdraw_sponsorship(
+    event_id: Union[int, str],
+    sponsor_id: Union[int, str],
+    sponsor_service: SponsorService = Depends(get_sponsor_service),
+):
+    sponsor_service.remove(sponsor_id, event_id)
     return JSONResponse(
         status_code=200, content={"message": "Sponsorship withdrawn successfully"}
     )

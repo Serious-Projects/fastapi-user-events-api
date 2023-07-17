@@ -1,8 +1,8 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import relationship
 
-from ...database.connection import Base
-from ..models.relations import event_sponsor_association, user_event_association
+from app.api.models.relations import event_sponsor_association, user_event_association
+from app.database.connection import Base
 
 
 class EventModel(Base):

@@ -21,8 +21,3 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings():
     return Settings()
-
-
-AppSettings = Annotated[Settings, Depends(get_settings)]
-
-config = Settings()
