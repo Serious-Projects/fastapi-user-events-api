@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from app.api.routers import authRouter, eventRouter, sponsorRouter, userRouter
+from app.api.routers import auth_router, event_router, sponsor_router, user_router
 from app.database.connection import Base, engine
 
 # FastAPI instance
@@ -37,7 +37,7 @@ async def check_health():
 
 
 # register all the business route handlers
-app.include_router(authRouter)
-app.include_router(eventRouter)
-app.include_router(userRouter)
-app.include_router(sponsorRouter)
+app.include_router(auth_router)
+app.include_router(event_router)
+app.include_router(user_router)
+app.include_router(sponsor_router)

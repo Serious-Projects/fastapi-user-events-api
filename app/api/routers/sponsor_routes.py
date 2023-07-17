@@ -8,10 +8,10 @@ from app.api.services import get_event_service, get_sponsor_service
 from app.api.services.event_service import EventService
 from app.api.services.sponsor_service import SponsorService
 
-sponsorRouter = APIRouter()
+sponsor_router = APIRouter()
 
 
-@sponsorRouter.post(
+@sponsor_router.post(
     "/to/{event_id}", status_code=status.HTTP_200_OK, response_model=Sponsor
 )
 def sponsor_the_event(
@@ -26,7 +26,7 @@ def sponsor_the_event(
     )
 
 
-@sponsorRouter.get(
+@sponsor_router.get(
     "/{event_id}/withdraw-sponsorship/{sponsor_id}", status_code=status.HTTP_200_OK
 )
 def withdraw_sponsorship(

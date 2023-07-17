@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -13,31 +13,33 @@ from app.utils.exceptions import EntityNotFoundException
 
 class SponsorRepository:
     def __init__(self, db: Session = Depends(get_db)):
-        self._session_db = db
+        self._db = db
 
-    def get(self, id: Union[int, str]) -> SponsorModel:
-        sponsor = self._session_db.query(SponsorModel).get(id)
-        if sponsor is None:
-            raise EntityNotFoundException(detail="no sponsor found")
-        return sponsor
+    def get(self, id: Union[int, str]) -> Optional[SponsorModel]:
+        return self._db.query(SponsorModel).get(id)
 
     def add_sponsorship(
-        self, sponsor: SponsorCreate, event: EventModel
+        self,
+        sponsor: SponsorCreate,
+        event: EventModel,
     ) -> SponsorModel:
         new_sponsor = SponsorModel(
             name=sponsor.name, logo=sponsor.logo, contact=sponsor.contact
         )
         event.sponsors.append(new_sponsor)
-        self._session_db.add(new_sponsor)
-        self._session_db.commit()
-        self._session_db.refresh(new_sponsor)
+        self._db.add(new_sponsor)
+        self._db.commit()
+        self._db.refresh(new_sponsor)
         return new_sponsor
 
     def remove_sponsorship(
-        self, sponsor_id: Union[int, str], event_id: Union[int, str], event: EventModel
+        self,
+        sponsor_id: Union[int, str],
+        event_id: Union[int, str],
+        event: EventModel,
     ) -> None:
         sponsor = (
-            self._session_db.query(SponsorModel)
+            self._db.query(SponsorModel)
             .join(event_sponsor_association)
             .filter(
                 SponsorModel.id == sponsor_id,
@@ -51,9 +53,9 @@ class SponsorRepository:
         event.sponsors.remove(sponsor)
         # delete the actual sponsor from the database too, because `remove()` only removes the association
         # and does not delete's the original entity!
-        self._session_db.delete(sponsor)
-        self._session_db.commit()
+        self._db.delete(sponsor)
+        self._db.commit()
 
     def check_event_exists(self, id: int) -> bool:
-        event = self._session_db.query(SponsorModel).get(id)
+        event = self._db.query(SponsorModel).get(id)
         return event is not None
