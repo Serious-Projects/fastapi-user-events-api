@@ -2,11 +2,11 @@ from typing import List, Union
 
 from sqlalchemy import BooleanClauseList
 
-from app.api.models.event import EventModel
-from app.api.repositories.event_repository import EventRepository
-from app.api.schema.event import EventIn, UpdateEvent
-from app.utils.exceptions import EntityNotFoundException
-from app.utils.jwt import CurrentLoggedInUser
+from ..models.event import EventModel
+from ..repositories.event_repository import EventRepository
+from ..schema.event import EventIn, UpdateEvent
+from ...utils.exceptions import EntityNotFoundException
+from ...utils.jwt import CurrentLoggedInUser
 
 
 class EventService:

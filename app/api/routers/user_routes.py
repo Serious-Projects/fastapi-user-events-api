@@ -2,10 +2,10 @@ from typing import List
 
 from fastapi import APIRouter, Depends, status
 
-from app.api.models.user import UserModel
-from app.api.schema.user import UpdateUser, UserOut
-from app.api.services import UserService, get_user_service
-from app.utils.jwt import CurrentLoggedInUser
+from ..models.user import UserModel
+from ..schema.user import UpdateUser, UserOut
+from ..services import UserService, get_user_service
+from ...utils.jwt import CurrentLoggedInUser
 
 user_router = APIRouter(prefix="/users", tags=["User Routes"])
 

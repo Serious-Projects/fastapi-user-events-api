@@ -1,13 +1,12 @@
 from typing import Optional, Union
 
-from fastapi import Depends
 from sqlalchemy import BooleanClauseList
 from sqlalchemy.orm import Session
 
-from app.api.models.event import EventModel
-from app.api.schema.auth import CurrentUser
-from app.api.schema.event import EventIn, UpdateEvent
-from app.database.connection import get_db
+from ..models.event import EventModel
+from ..schema.auth import CurrentUser
+from ..schema.event import EventIn, UpdateEvent
+from ...database.connection import get_db
 
 
 class EventRepository:
@@ -27,7 +26,7 @@ class EventRepository:
     def get_by_filter(self, *filter: BooleanClauseList):
         return self._db.query(EventModel).filter(*filter).first()
 
-    def get_all_by_filter(self, filter: BooleanClauseList):
+    def get_all_by_filter(self, *filter: BooleanClauseList):
         return self._db.query(EventModel).filter(*filter).all()
 
     def update(self, id: Union[int, str], event_data: UpdateEvent) -> EventModel:

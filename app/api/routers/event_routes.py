@@ -2,9 +2,9 @@ from typing import Union
 
 from fastapi import APIRouter, Depends, status
 
-from app.api.schema.event import EventIn, EventOut, UpdateEvent
-from app.api.services import EventService, get_event_service
-from app.utils.jwt import CurrentLoggedInUser
+from ..schema.event import EventIn, EventOut, UpdateEvent
+from ..services import EventService, get_event_service
+from ...utils.jwt import CurrentLoggedInUser
 
 event_router = APIRouter(tags=["Event Routes"])
 

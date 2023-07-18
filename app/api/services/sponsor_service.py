@@ -1,10 +1,10 @@
 from typing import Union
 
-from app.api.models.sponsor import SponsorModel
-from app.api.repositories.sponsor_repository import SponsorRepository
-from app.api.schema.sponsor import SponsorCreate
-from app.api.services.event_service import EventService
-from app.utils.exceptions import EntityNotFoundException
+from ..models.sponsor import SponsorModel
+from ..repositories.sponsor_repository import SponsorRepository
+from ..schema.sponsor import SponsorCreate
+from .event_service import EventService
+from ...utils.exceptions import EntityNotFoundException
 
 
 class SponsorService:

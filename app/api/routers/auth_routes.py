@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 from typing_extensions import Annotated
 
-from app.api.schema.auth import TokenBody, UserCredentials
-from app.api.schema.user import UserCreate, UserOut
-from app.api.services import get_auth_service, get_user_service
-from app.api.services.auth_service import AuthenticationService
-from app.api.services.user_service import UserService
+from ..schema.auth import TokenBody, UserCredentials
+from ..schema.user import UserCreate, UserOut
+from ..services import get_auth_service, get_user_service
+from ..services.auth_service import AuthenticationService
+from ..services.user_service import UserService
 
 auth_router = APIRouter(prefix="/auth", tags=["Authentication Routes"])
 

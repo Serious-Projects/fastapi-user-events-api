@@ -1,8 +1,9 @@
+from typing import Optional
 from faker import Faker
+from requests import Session
 
 from app.api.models.event import EventModel
 from app.api.models.user import UserModel
-from app.database.connection import Session
 
 fake = Faker()
 
@@ -12,7 +13,7 @@ class EntityNotFound(Exception):
         super().__init__(message)
 
 
-def seed_users(session: Session):
+def seed_users(session: Optional[Session]):
     for _ in range(10):
         user = UserModel(name=fake.name(), email=fake.email(), password=fake.password())
         session.add(user)

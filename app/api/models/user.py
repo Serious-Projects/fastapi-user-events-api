@@ -1,8 +1,8 @@
 from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
 
-from app.api.models.relations import user_event_association
-from app.database.connection import Base
+from .relations import user_event_association
+from ...database.connection import Base
 
 
 class UserModel(Base):
@@ -29,4 +29,4 @@ class UserModel(Base):
         return f"<User(id={self.id}, name={self.name}, email={self.email})>"
 
 
-from app.api.models.event import EventModel
+from .event import EventModel

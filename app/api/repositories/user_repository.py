@@ -2,11 +2,10 @@ from typing import Any, Optional, Union
 
 from sqlalchemy.orm import Session
 
-from app.api.models.user import UserModel
-from app.api.schema.user import UpdateUser, UserCreate
-from app.database.connection import get_db
-from app.utils.exceptions import EntityNotFoundException
-from app.utils.hashing import hash_password
+from ..models.user import UserModel
+from ..schema.user import UpdateUser, UserCreate
+from ...database.connection import get_db
+from ...utils.hashing import hash_password
 
 
 class UserRepository:
@@ -31,9 +30,7 @@ class UserRepository:
 
     def create(self, user: UserCreate) -> UserModel:
         hashed_password = hash_password(user.password)
-        user_create = UserModel(
-            name=user.name, email=user.email, password=hashed_password
-        )
+        user_create = UserModel(name=user.name, email=user.email, password=hashed_password)  # fmt: skip
         self._db.add(user_create)
         self._db.commit()
         self._db.refresh(user_create)

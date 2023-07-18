@@ -3,10 +3,10 @@ from typing import Union
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 
-from app.api.schema.sponsor import Sponsor, SponsorCreate
-from app.api.services import get_event_service, get_sponsor_service
-from app.api.services.event_service import EventService
-from app.api.services.sponsor_service import SponsorService
+from ..schema.sponsor import Sponsor, SponsorCreate
+from ..services import get_event_service, get_sponsor_service
+from ..services.event_service import EventService
+from ..services.sponsor_service import SponsorService
 
 sponsor_router = APIRouter()
 

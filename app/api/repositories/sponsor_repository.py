@@ -3,12 +3,12 @@ from typing import Optional, Union
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.api.models.event import EventModel
-from app.api.models.relations import event_sponsor_association
-from app.api.models.sponsor import SponsorModel
-from app.api.schema.sponsor import SponsorCreate
-from app.database.connection import get_db
-from app.utils.exceptions import EntityNotFoundException
+from ..models.event import EventModel
+from ..models.relations import event_sponsor_association
+from ..models.sponsor import SponsorModel
+from ..schema.sponsor import SponsorCreate
+from ...database.connection import get_db
+from ...utils.exceptions import EntityNotFoundException
 
 
 class SponsorRepository:
@@ -25,9 +25,7 @@ class SponsorRepository:
     def add_sponsorship(
         self, sponsor: SponsorCreate, event: EventModel
     ) -> SponsorModel:
-        new_sponsor = SponsorModel(
-            name=sponsor.name, logo=sponsor.logo, contact=sponsor.contact
-        )
+        new_sponsor = SponsorModel(name=sponsor.name, logo=sponsor.logo, contact=sponsor.contact)  # fmt: skip
         event.sponsors.append(new_sponsor)
         self._db.add(new_sponsor)
         self._db.commit()

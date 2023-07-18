@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, Table, func
 
-from app.database.connection import Base
+from ...database.connection import Base
 
 user_event_association = Table(
     "enrollments_table",

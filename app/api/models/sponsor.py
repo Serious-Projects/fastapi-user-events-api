@@ -1,8 +1,8 @@
 from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
 
-from app.api.models.relations import event_sponsor_association
-from app.database.connection import Base
+from .relations import event_sponsor_association
+from ...database.connection import Base
 
 
 class SponsorModel(Base):

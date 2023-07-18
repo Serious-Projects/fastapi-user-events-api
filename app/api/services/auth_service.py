@@ -4,10 +4,10 @@ from typing import TYPE_CHECKING
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.api.schema.auth import TokenBody, UserCredentials
-from app.config import Settings, get_settings
-from app.utils.hashing import verify_password
-from app.utils.jwt import create_access_token
+from ..schema.auth import TokenBody, UserCredentials
+from ...config import Settings, get_settings
+from ...utils.hashing import verify_password
+from ...utils.jwt import create_access_token
 
 if TYPE_CHECKING:
     from app.api.services import UserService

@@ -2,8 +2,8 @@ from typing import Any, Union
 
 from fastapi import Depends
 
-from app.api.repositories.user_repository import UserRepository
-from app.api.schema.user import UpdateUser, UserCreate
+from ..repositories.user_repository import UserRepository
+from ..schema.user import UpdateUser, UserCreate
 
 
 class UserService:
