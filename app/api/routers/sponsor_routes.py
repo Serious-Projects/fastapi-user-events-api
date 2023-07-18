@@ -12,7 +12,9 @@ sponsor_router = APIRouter()
 
 
 @sponsor_router.post(
-    "/to/{event_id}", status_code=status.HTTP_200_OK, response_model=Sponsor
+    "/event/{event_id}/sponsor-it",
+    status_code=status.HTTP_200_OK,
+    response_model=Sponsor,
 )
 def sponsor_the_event(
     event_id: Union[int, str],
@@ -20,14 +22,12 @@ def sponsor_the_event(
     sponsor_service: SponsorService = Depends(get_sponsor_service),
 ):
     sponsor_service.add(event_id, sponsor)
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content={"message": "sponsorship added successfully"},
-    )
+    return {"message": "sponsorship added successfully"}
 
 
 @sponsor_router.get(
-    "/{event_id}/withdraw-sponsorship/{sponsor_id}", status_code=status.HTTP_200_OK
+    "/event/{event_id}/withdraw-sponsorship/{sponsor_id}",
+    status_code=status.HTTP_200_OK,
 )
 def withdraw_sponsorship(
     event_id: Union[int, str],
@@ -35,6 +35,4 @@ def withdraw_sponsorship(
     sponsor_service: SponsorService = Depends(get_sponsor_service),
 ):
     sponsor_service.remove(sponsor_id, event_id)
-    return JSONResponse(
-        status_code=200, content={"message": "Sponsorship withdrawn successfully"}
-    )
+    return {"message": "Sponsorship withdrawn successfully"}
