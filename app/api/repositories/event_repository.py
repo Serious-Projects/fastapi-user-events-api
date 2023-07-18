@@ -11,13 +11,17 @@ from app.database.connection import get_db
 
 
 class EventRepository:
-    def __init__(self, db: Session = Depends(get_db)):
-        self._db = db
+    _db: Session
+
+    def __init__(self, db: Optional[Session] = None):
+        # using `next(get_db())` because it is a generator function that automatically
+        # creates a context manager for each session to properly handle the resources
+        self._db = db if db is not None else next(get_db())
 
     def get_all(self) -> list[EventModel]:
         return self._db.query(EventModel).all()
 
-    def get(self, id: Union[int, str]) -> Optional[EventModel]:
+    def get_by_id(self, id: Union[int, str]) -> Optional[EventModel]:
         return self._db.query(EventModel).get(id)
 
     def get_by_filter(self, *filter: BooleanClauseList):
@@ -27,7 +31,7 @@ class EventRepository:
         return self._db.query(EventModel).filter(*filter).all()
 
     def update(self, id: Union[int, str], event_data: UpdateEvent) -> EventModel:
-        event = self.get(id)
+        event = self.get_by_id(id)
         # Update the user
         event_dict = event_data.dict(exclude_unset=True)
         for key, value in event_dict.items():
@@ -40,7 +44,7 @@ class EventRepository:
 
     def delete(self, id: Union[int, str]) -> EventModel:
         # check for the event existence
-        event = self.get(id)
+        event = self.get_by_id(id)
         # delete the event from the database
         self._db.delete(event)
         self._db.commit()

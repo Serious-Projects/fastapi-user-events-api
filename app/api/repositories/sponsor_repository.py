@@ -12,16 +12,18 @@ from app.utils.exceptions import EntityNotFoundException
 
 
 class SponsorRepository:
-    def __init__(self, db: Session = Depends(get_db)):
-        self._db = db
+    _db: Session
 
-    def get(self, id: Union[int, str]) -> Optional[SponsorModel]:
+    def __init__(self, db: Optional[Session] = None):
+        # using `next(get_db())` because it is a generator function that automatically
+        # creates a context manager for each session to properly handle the resources
+        self._db = db if db is not None else next(get_db())
+
+    def get_by_id(self, id: Union[int, str]) -> Optional[SponsorModel]:
         return self._db.query(SponsorModel).get(id)
 
     def add_sponsorship(
-        self,
-        sponsor: SponsorCreate,
-        event: EventModel,
+        self, sponsor: SponsorCreate, event: EventModel
     ) -> SponsorModel:
         new_sponsor = SponsorModel(
             name=sponsor.name, logo=sponsor.logo, contact=sponsor.contact
@@ -57,5 +59,5 @@ class SponsorRepository:
         self._db.commit()
 
     def check_event_exists(self, id: int) -> bool:
-        event = self._db.query(SponsorModel).get(id)
+        event = self.get_by_id(id)
         return event is not None

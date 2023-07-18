@@ -11,8 +11,10 @@ Base = declarative_base()
 
 # Dependency
 def get_db():
-    db = SessionLocal()
+    db_session = SessionLocal()
     try:
-        yield db
+        yield db_session
+    except Exception as e:
+        print("Error:", str(type(e)))
     finally:
-        db.close()
+        db_session.close()

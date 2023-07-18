@@ -7,7 +7,7 @@ from app.api.schema.user import UpdateUser, UserOut
 from app.api.services import UserService, get_user_service
 from app.utils.jwt import CurrentLoggedInUser
 
-user_router = APIRouter(prefix="/users")
+user_router = APIRouter(prefix="/users", tags=["User Routes"])
 
 
 @user_router.get("", status_code=status.HTTP_200_OK, response_model=UserOut)
@@ -39,5 +39,5 @@ def update_user(
 @user_router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(
     user_id: int, user_service: UserService = Depends(get_user_service)
-) -> UserModel:
-    return user_service.delete(user_id)
+) -> None:
+    user_service.delete(user_id)

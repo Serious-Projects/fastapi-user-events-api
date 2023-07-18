@@ -6,7 +6,7 @@ from app.api.schema.event import EventIn, EventOut, UpdateEvent
 from app.api.services import EventService, get_event_service
 from app.utils.jwt import CurrentLoggedInUser
 
-event_router = APIRouter(prefix="")
+event_router = APIRouter(tags=["Event Routes"])
 
 
 @event_router.get(
@@ -23,7 +23,7 @@ def get_event(
     event_id: Union[int, str],
     event_service: EventService = Depends(get_event_service),
 ):
-    return event_service.get(event_id)
+    return event_service.get_by_id(event_id)
 
 
 @event_router.post(

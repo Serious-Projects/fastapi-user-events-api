@@ -1,6 +1,5 @@
-from typing import Any, Union
+from typing import Any, Optional, Union
 
-from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.api.models.user import UserModel
@@ -11,26 +10,24 @@ from app.utils.hashing import hash_password
 
 
 class UserRepository:
-    def __init__(self, db: Session = Depends(get_db)):
-        self._db = db
+    _db: Session
 
-    def get_by_id(self, id: Union[int, str]) -> UserModel:
-        user = self._db.query(UserModel).get(id)
-        if user is None:
-            raise EntityNotFoundException("user not found")
-        return user
+    def __init__(self, db: Optional[Session] = None):
+        # using `next(get_db())` because it is a generator function that automatically
+        # creates a context manager for each session to properly handle the resources
+        self._db = db if db is not None else next(get_db())
+
+    def get_by_id(self, id: Union[int, str]) -> Optional[UserModel]:
+        return self._db.query(UserModel).get(id)
 
     def get_all(self) -> list[UserModel]:
-        users = self._db.query(UserModel).all()
-        return users
+        return self._db.query(UserModel).all()
 
     def get_by_filter(self, **filter: Any) -> UserModel:
-        user = self._db.query(UserModel).filter_by(**filter).first()
-        return user
+        return self._db.query(UserModel).filter_by(**filter).first()
 
     def get_all_by_filter(self, **filter) -> list[UserModel]:
-        users = self._db.query(UserModel).filter_by(**filter).all()
-        return users
+        return self._db.query(UserModel).filter_by(**filter).all()
 
     def create(self, user: UserCreate) -> UserModel:
         hashed_password = hash_password(user.password)
@@ -43,7 +40,7 @@ class UserRepository:
         return user_create
 
     def exists(self, id: Union[int, str]) -> bool:
-        user = self._db.query(UserModel).get(id)
+        user = self.get_by_id(id)
         return user is not None
 
     def update(self, id: Union[int, str], patch_data: UpdateUser) -> UserModel:

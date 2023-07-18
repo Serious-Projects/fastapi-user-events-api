@@ -8,7 +8,7 @@ from app.api.services import get_auth_service, get_user_service
 from app.api.services.auth_service import AuthenticationService
 from app.api.services.user_service import UserService
 
-auth_router = APIRouter(prefix="/auth")
+auth_router = APIRouter(prefix="/auth", tags=["Authentication Routes"])
 
 
 @auth_router.post("/login", status_code=status.HTTP_200_OK, response_model=TokenBody)

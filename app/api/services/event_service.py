@@ -5,6 +5,7 @@ from sqlalchemy import BooleanClauseList
 from app.api.models.event import EventModel
 from app.api.repositories.event_repository import EventRepository
 from app.api.schema.event import EventIn, UpdateEvent
+from app.utils.exceptions import EntityNotFoundException
 from app.utils.jwt import CurrentLoggedInUser
 
 
@@ -12,14 +13,20 @@ class EventService:
     def __init__(self, event_repository: EventRepository):
         self._repository = event_repository
 
-    def get(self, id: Union[int, str]) -> EventModel:
-        return self._repository.get(id)
+    def get_by_id(self, id: Union[int, str]) -> EventModel:
+        user = self._repository.get_by_id(id)
+        if user is None:
+            raise EntityNotFoundException("user not found")
+        return user
 
     def get_all(self) -> List[EventModel]:
         return self._repository.get_all()
 
     def get_by_filter(self, filter: BooleanClauseList) -> EventModel:
-        return self._repository.get_by_filter(filter)
+        user = self._repository.get_by_filter(filter)
+        if user is None:
+            raise EntityNotFoundException("user not found")
+        return user
 
     def get_all_by_filter(self, filter: BooleanClauseList) -> List[EventModel]:
         return self._repository.get_all_by_filter(filter)
