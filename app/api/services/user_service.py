@@ -1,7 +1,5 @@
 from typing import Any, Union
 
-from fastapi import Depends
-
 from ..repositories.user_repository import UserRepository
 from ..schema.user import UpdateUser, UserCreate
 

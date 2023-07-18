@@ -22,12 +22,12 @@ def handle_unique_constraint_violation(req: Request, e: HTTPException):
 
 
 # # Handle pydantic validation errors
-# @app.exception_handler(RequestValidationError)
-# def handle_value_error(req: Request, e: Exception):
-#     return JSONResponse(
-#         status_code=status.HTTP_400_BAD_REQUEST,
-#         content={"message": str(e)},
-#     )
+@app.exception_handler(RequestValidationError)
+def handle_value_error(req: Request, e: Exception):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={"message": str(e)},
+    )
 
 
 # Health-check route

@@ -2,9 +2,9 @@ from typing import Union
 
 from fastapi import APIRouter, Depends, status
 
+from ...utils.jwt import CurrentUser
 from ..schema.event import EventIn, EventOut, UpdateEvent
 from ..services import EventService, get_event_service
-from ...utils.jwt import CurrentLoggedInUser
 
 event_router = APIRouter(tags=["Event Routes"])
 
@@ -30,8 +30,8 @@ def get_event(
     "/event", status_code=status.HTTP_201_CREATED, response_model=EventOut
 )
 def create_event(
-    curr_user: CurrentLoggedInUser,
     event: EventIn,
+    curr_user: CurrentUser,
     event_service: EventService = Depends(get_event_service),
 ):
     return event_service.create(event, curr_user)

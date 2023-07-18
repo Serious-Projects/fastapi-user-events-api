@@ -2,11 +2,12 @@ from typing import List, Union
 
 from sqlalchemy import BooleanClauseList
 
+from app.api.schema.auth import CurrentUser
+
+from ...utils.exceptions import EntityNotFoundException
 from ..models.event import EventModel
 from ..repositories.event_repository import EventRepository
 from ..schema.event import EventIn, UpdateEvent
-from ...utils.exceptions import EntityNotFoundException
-from ...utils.jwt import CurrentLoggedInUser
 
 
 class EventService:
@@ -31,7 +32,7 @@ class EventService:
     def get_all_by_filter(self, filter: BooleanClauseList) -> List[EventModel]:
         return self._repository.get_all_by_filter(filter)
 
-    def create(self, event: EventIn, current_user: CurrentLoggedInUser) -> EventModel:
+    def create(self, event: EventIn, current_user: CurrentUser) -> EventModel:
         return self._repository.create(event, current_user)
 
     def update(self, id: Union[int, str], event: UpdateEvent) -> EventModel:

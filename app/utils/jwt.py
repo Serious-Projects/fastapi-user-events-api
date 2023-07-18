@@ -5,13 +5,10 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
-from ..api.models.user import UserModel
 from ..api.schema.auth import CurrentUser
 from ..config import Settings, get_settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-
-Token = Annotated[str, Depends(oauth2_scheme)]
 
 
 def create_access_token(
@@ -26,13 +23,15 @@ def create_access_token(
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     encoded_jwt_token = jwt.encode(
-        to_encode, config.HASH_SECRET_KEY, algorithm=config.ALGORITHM
+        to_encode,
+        config.HASH_SECRET_KEY,
+        algorithm=config.ALGORITHM,
     )
     return encoded_jwt_token
 
 
-def authenticate_user(token: Token) -> UserModel:
-    from app.api.services import UserService, get_user_service
+def authenticate_user(token: str = Depends(oauth2_scheme)) -> CurrentUser:
+    from ..api.services import UserService, get_user_service
 
     user_service: UserService = get_user_service()
     config: Settings = get_settings()
@@ -48,6 +47,7 @@ def authenticate_user(token: Token) -> UserModel:
                 detail="Invalid authentication token",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+
         user = user_service.get_by_filter(name=username)
         if user is None:
             raise HTTPException(
@@ -55,7 +55,8 @@ def authenticate_user(token: Token) -> UserModel:
                 detail="Invalid username",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        return user
+
+        return CurrentUser.from_orm(user)
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -64,4 +65,4 @@ def authenticate_user(token: Token) -> UserModel:
         )
 
 
-CurrentLoggedInUser = Annotated[CurrentUser, Depends(authenticate_user)]
+CurrentLoggedUser = Annotated[str, Depends(authenticate_user)]

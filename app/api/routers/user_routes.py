@@ -2,10 +2,10 @@ from typing import List
 
 from fastapi import APIRouter, Depends, status
 
+from ...utils.jwt import CurrentLoggedUser
 from ..models.user import UserModel
 from ..schema.user import UpdateUser, UserOut
 from ..services import UserService, get_user_service
-from ...utils.jwt import CurrentLoggedInUser
 
 user_router = APIRouter(prefix="/users", tags=["User Routes"])
 
@@ -16,14 +16,12 @@ def get_users(user_service: UserService = Depends(get_user_service)) -> List[Use
 
 
 @user_router.get("/me", status_code=status.HTTP_200_OK, response_model=UserOut)
-def get_me(curr_user: CurrentLoggedInUser) -> CurrentLoggedInUser:
+def get_me(curr_user: CurrentLoggedUser):
     return curr_user
 
 
 @user_router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=UserOut)
-def get_user(
-    user_id: int, user_service: UserService = Depends(get_user_service)
-) -> UserModel:
+def get_user(user_id: int, user_service: UserService = Depends(get_user_service)):
     return user_service.get(user_id)
 
 
@@ -32,12 +30,10 @@ def update_user(
     user_id: int,
     user_patch: UpdateUser,
     user_service: UserService = Depends(get_user_service),
-) -> UserModel:
+):
     return user_service.update(user_id, user_patch)
 
 
 @user_router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(
-    user_id: int, user_service: UserService = Depends(get_user_service)
-) -> None:
+def delete_user(user_id: int, user_service: UserService = Depends(get_user_service)):
     user_service.delete(user_id)

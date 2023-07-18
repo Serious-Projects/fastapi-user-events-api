@@ -3,10 +3,10 @@ from typing import Optional, Union
 from sqlalchemy import BooleanClauseList
 from sqlalchemy.orm import Session
 
+from ...database.connection import get_db
 from ..models.event import EventModel
 from ..schema.auth import CurrentUser
 from ..schema.event import EventIn, UpdateEvent
-from ...database.connection import get_db
 
 
 class EventRepository:
